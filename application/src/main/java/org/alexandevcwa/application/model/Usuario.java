@@ -1,14 +1,14 @@
 package org.alexandevcwa.application.model;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 import java.util.Date;
 
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Usuario {
 
     @Setter(AccessLevel.NONE)

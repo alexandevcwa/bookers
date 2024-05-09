@@ -1,3 +1,7 @@
 source/Bookers_Frontend/.idea
 source/Bookers_Frontend/.mvn
 source/Bookers_Frontend/.gitignore
+
+application/.idea/
+application/.mvn/
+application/sql/.idea/

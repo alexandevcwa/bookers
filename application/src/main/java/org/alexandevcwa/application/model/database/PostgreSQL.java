@@ -17,10 +17,12 @@ public class PostgreSQL {
 
     private String password;
 
-    @Getter
+    //@Getter
     private Connection connection;
 
     private static PostgreSQL postgreSQL;
+
+    public Connection getConnection() {return this.connection;}
 
     /**
      * Método constructor de clase

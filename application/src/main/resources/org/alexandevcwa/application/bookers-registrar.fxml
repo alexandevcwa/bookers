@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="538.0" prefWidth="608.0" stylesheets="@../../../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.alexandevcwa.application.controller.RegistrarController">
+   <children>
+      <Text layoutX="37.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-h2" text="Registro de Nuevos Miembros" />
+      <TextField fx:id="textField_Nombre" layoutX="61.0" layoutY="109.0" prefHeight="32.0" prefWidth="237.0" styleClass="textField" />
+      <TextField fx:id="textField_Apellido" layoutX="309.0" layoutY="109.0" prefHeight="32.0" prefWidth="238.0" styleClass="textField">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </TextField>
+      <TextField fx:id="textField_Direccion" layoutX="61.0" layoutY="175.0" prefHeight="32.0" prefWidth="485.0" styleClass="textField" />
+      <TextField fx:id="textField_CUI" layoutX="61.0" layoutY="241.0" prefHeight="32.0" prefWidth="238.0" styleClass="textField" />
+      <TextField fx:id="textField_Telefono" layoutX="309.0" layoutY="241.0" prefHeight="32.0" prefWidth="238.0" styleClass="textField" />
+      <TextField fx:id="textField_Email" layoutX="61.0" layoutY="307.0" prefHeight="32.0" prefWidth="238.0" styleClass="textField" />
+      <PasswordField fx:id="passwordField_Password" layoutX="309.0" layoutY="307.0" prefHeight="32.0" prefWidth="238.0" styleClass="textField" />
+      <Button fx:id="button_Registrar" layoutX="488.0" layoutY="485.0" mnemonicParsing="false" text="Registrarse" />
+      <Label fx:id="label_Messages" alignment="TOP_LEFT" layoutX="76.0" layoutY="454.0" maxHeight="70.0" maxWidth="410.0" minHeight="42.0" minWidth="374.0" prefHeight="70.0" prefWidth="396.0" styleClass="label-message" wrapText="true" />
+      <Label layoutX="62.0" layoutY="82.0" text="Nombres" />
+      <Label layoutX="310.0" layoutY="82.0" text="Apellidos" />
+      <Label layoutX="62.0" layoutY="148.0" text="Dirección" />
+      <Label layoutX="62.0" layoutY="214.0" text="CUI" />
+      <Label layoutX="310.0" layoutY="214.0" text="Teléfono" />
+      <Label layoutX="62.0" layoutY="280.0" text="Correo" />
+      <Label layoutX="310.0" layoutY="280.0" text="Contraseña" />
+      <ComboBox fx:id="comboBox_Paises" layoutX="61.0" layoutY="360.0" prefHeight="32.0" prefWidth="238.0" promptText="País" styleClass="textField" />
+      <ComboBox fx:id="comboBox_Departamentos" layoutX="310.0" layoutY="360.0" prefHeight="32.0" prefWidth="238.0" promptText="Departamento" styleClass="textField" />
+      <ComboBox fx:id="comboBox_Municipios" layoutX="62.0" layoutY="412.0" prefHeight="32.0" prefWidth="238.0" promptText="Municipio" styleClass="textField" />
+   </children>
+</AnchorPane>

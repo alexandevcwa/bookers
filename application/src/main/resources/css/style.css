@@ -1,0 +1,58 @@
+.textField {
+    -fx-background-radius: 8px;
+    -fx-min-height: 32px;
+    -fx-border-style: none;
+    -fx-border-color: none;
+    -fx-font-size: 14px;
+}
+
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #595959;
+    -fx-label-padding: 0 0 6px 0;
+}
+
+.label-message{
+    -fx-font-size: 12px;
+    -fx-text-fill: #595959;
+    -fx-text-fill: #039ed3;
+}
+
+.button{
+    -fx-font-size: 14px;
+    -fx-background-color: black;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+}
+
+.button-info:hover {
+    -fx-background-color: #2465d8;
+}
+
+.button-warning:hover {
+    -fx-background-color: red;
+}
+
+.button-alert:hover {
+    -fx-background-color: yellow;
+}
+
+.hyperlink {
+    -fx-font-size: 13px;
+}
+
+.text-h2{
+    -fx-font-size:18px ;
+}
+
+.combo-box{
+    -fx-background-radius: 8px;
+    -fx-min-height: 32px;
+    -fx-border-style: none;
+    -fx-border-color: #b3b3b3;
+    -fx-text-fill: gray;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-font-size: 14px;
+    -fx-background-color: white;
+}

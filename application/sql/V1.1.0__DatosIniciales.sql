@@ -18,6 +18,7 @@ values (1, 3),
 
 insert into paises(ps_nombre)
 values ('GUATEMALA');
+
 insert into departamentos (depto_nombre, ps_id)
 values ('GUATEMALA C.C.', 1);
 

@@ -10,14 +10,22 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PaisRepositoy {
+public class PaisRepositoy  implements CRUDRepository<Pais>{
     private Connection connection;
 
     public PaisRepositoy() {
         this.connection = PostgreSQL.getInstance().getConnection();
     }
 
-    public List<Pais> getAll() {
+
+
+    @Override
+    public Pais findById(int id) {
+        return null;
+    }
+
+    @Override
+    public List<Pais> findAll() {
         try (Statement statement = connection.createStatement())  {
             ResultSet resultSet = statement.executeQuery(SELECT_PAISES_ALL);
             List<Pais> paises = new ArrayList<>();
@@ -32,5 +40,21 @@ public class PaisRepositoy {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public int save(Pais pais) {
+        return 0;
+    }
+
+    @Override
+    public void delete(Pais pais) {
+
+    }
+
+    @Override
+    public int update(Pais pais) {
+        return 0;
+    }
+
     private final String SELECT_PAISES_ALL = "SELECT * FROM paises";
 }
