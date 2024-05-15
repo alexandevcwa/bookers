@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="681.0" prefWidth="879.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.alexandevcwa.application.controller.ControlPanelController">
+   <stylesheets>
+      <URL value="@../../../css/style.css" />
+      <URL value="@../../../css/panel-control.css" />
+   </stylesheets>
+   <center>
+      <TabPane prefHeight="629.0" prefWidth="879.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab text="Libros">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="615.0" prefWidth="879.0">
+                     <children>
+                        <TextField fx:id="textField_Titulo" layoutX="63.0" layoutY="104.0" prefHeight="32.0" prefWidth="274.0" styleClass="textField" />
+                        <DatePicker fx:id="datePicker_Publica" layoutX="65.0" layoutY="178.0" prefHeight="32.0" prefWidth="270.0" styleClass="textField" />
+                        <TextArea fx:id="textArea_Previa" layoutX="63.0" layoutY="248.0" prefHeight="126.0" prefWidth="274.0" />
+                        <TextField fx:id="textField_Isbn" layoutX="65.0" layoutY="411.0" prefHeight="32.0" prefWidth="274.0" styleClass="textField" />
+                        <ComboBox fx:id="comboBox_Autor" layoutX="65.0" layoutY="494.0" prefHeight="32.0" prefWidth="200.0" styleClass="textField" />
+                        <ComboBox fx:id="comboBox_Editorial" layoutX="284.0" layoutY="494.0" prefHeight="32.0" prefWidth="200.0" styleClass="textField" />
+                        <ComboBox fx:id="comboBox_Categoria" layoutX="503.0" layoutY="494.0" prefHeight="32.0" prefWidth="200.0" styleClass="textField" />
+                        <Button fx:id="button_Guardar" layoutX="650.0" layoutY="598.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="200.0" text="Guardar Libro">
+                           <styleClass>
+                              <String fx:value="button-general" />
+                              <String fx:value="button-info" />
+                           </styleClass>
+                        </Button>
+                        <Label layoutX="65.0" layoutY="77.0" text="Titulo" />
+                        <Label layoutX="65.0" layoutY="151.0" text="Fecha Publicación" />
+                        <Label layoutX="65.0" layoutY="221.0" text="Previa del Libro" />
+                        <Label layoutX="65.0" layoutY="384.0" text="ISBN" />
+                        <Hyperlink fx:id="hyperlink_BuscarCover" layoutX="415.0" layoutY="384.0" text="Buscar Imagen del Libro" />
+                        <Label layoutX="65.0" layoutY="467.0" text="Autor" />
+                        <Label layoutX="284.0" layoutY="467.0" text="Editorial" />
+                        <Label layoutX="503.0" layoutY="467.0" text="Categoría" />
+                        <Label fx:id="label_Titulo" layoutX="29.0" layoutY="25.0" styleClass="text-h2" text="Agregar Nuevo Libro" />
+                        <ToggleButton fx:id="toggleButton_Actualizar" layoutX="585.0" layoutY="105.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="200.0" text="Modo Actualización">
+                           <styleClass>
+                              <String fx:value="button-general" />
+                              <String fx:value="button-info" />
+                           </styleClass>
+                        </ToggleButton>
+                        <RadioButton fx:id="radioButton_Estado" contentDisplay="RIGHT" layoutX="594.0" layoutY="145.0" mnemonicParsing="false" selected="true" text="Desactivado" />
+                        <BorderPane layoutX="362.0" layoutY="104.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: gray;">
+                           <top>
+                              <ImageView fx:id="imageView_Cover" fitHeight="271.0" fitWidth="187.0" pickOnBounds="true" smooth="false" BorderPane.alignment="CENTER" />
+                           </top>
+                        </BorderPane>
+                        <Label fx:id="label_Message" layoutX="63.0" layoutY="559.0" styleClass="label-message" />
+                        <Button fx:id="button_BuscarLibro" disable="true" layoutX="585.0" layoutY="179.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="200.0" text="Buscar Libro">
+                           <styleClass>
+                              <String fx:value="button-general" />
+                              <String fx:value="button-info" />
+                           </styleClass></Button>
+                        <Button fx:id="button_Limpiar" layoutX="585.0" layoutY="225.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="200.0" text="Limpiar Pantalla">
+                           <styleClass>
+                              <String fx:value="button-general" />
+                              <String fx:value="button-warning" />
+                           </styleClass>
+                        </Button>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Inventarios">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+            <Tab text="Reportes">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </center>
+</BorderPane>

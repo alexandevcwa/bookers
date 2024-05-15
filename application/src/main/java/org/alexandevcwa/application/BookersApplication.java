@@ -18,8 +18,8 @@ public class BookersApplication extends Application {
         stage.initStyle(StageStyle.DECORATED);
         Scene scene = new Scene(fxmlLoader.load());
         stage.setScene(scene);
-        LoginController loginController = fxmlLoader.getController();
-        loginController.setLoginStage(stage);
+        //LoginController loginController = fxmlLoader.getController();
+        //loginController.setLoginStage(stage);
         stage.show();
     }
 

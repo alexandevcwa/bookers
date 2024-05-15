@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import lombok.Setter;
 import org.alexandevcwa.application.BookersApplication;
 import org.alexandevcwa.application.controller.util.TextFieldConfiguration;
@@ -72,10 +73,10 @@ public class LoginController {
             if (this.textField_cui.getLength() < 13 && this.passwordField_Contrasenia.getText().length() > 0) {
                 this.label_mensaje.setText("Los campos no cumple con el mínimo requerido");
             } else {
-                boolean auth = usuarioRepository.existsByCuiAndPassword(textField_cui.getText(), passwordField_Contrasenia.getText());
-                if (auth) {
+                Usuario usuario = usuarioRepository.findByCuiAndPassword(textField_cui.getText(), passwordField_Contrasenia.getText());
+                if (usuario != null) {
                     try {
-                        openDashboard();
+                        openDashboard(usuario);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -91,14 +92,16 @@ public class LoginController {
         });
     }
 
-    private void openDashboard() throws IOException {
+    private void openDashboard(Usuario usuario) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(BookersApplication.class.getResource("bookers-dashboard.fxml"));
         Stage stage = new Stage();
         stage.setMaximized(true);
         stage.setResizable(false);
         Scene scene = new Scene(fxmlLoader.load());
         stage.setScene(scene);
+        DashboardController controller = fxmlLoader.getController();
+        controller.setDashboardStage(stage);
+        controller.setUsuario(usuario);
         stage.show();
     }
-
 }

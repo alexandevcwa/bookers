@@ -75,6 +75,7 @@ public class RegistrarController {
         TextFieldConfiguration.textFieldUpperCase(textField_Direccion);
         TextFieldConfiguration.textFieldSetRegex(textField_CUI, "\\d*");
         TextFieldConfiguration.textFieldSetRegex(textField_Telefono, "\\d*");
+
         TextFieldConfiguration.textFieldVerifyContentWithRegex(textField_Email, "([\\w\\.\\-_]+)?\\w+@[\\w-_]+(\\.\\w+){1,}", label_Messages, "El formato del correo no es correcto");
 
         TextFieldConfiguration.textFieldFocusLost(
@@ -98,19 +99,25 @@ public class RegistrarController {
         TextFieldConfiguration.textFieldFocusLost(
                 textField_CUI, 13, 13,
                 "El número de CUI es requerido y debe de tener mínimo 13 dígitos", label_Messages,
-                "setUsrCui", usuario
+                "setUsrCui", usuario,
+                (usuarioRepository::existsByCui),
+                "El número de CUI ingresado ya pertenece a una cuenta existente"
         );
 
         TextFieldConfiguration.textFieldFocusLost(
                 textField_Telefono, 8, 9,
                 "El número de teléfono es requerido con 8 o 9 dígitos como mínimo", label_Messages,
-                "setUsrTelefono", usuario
+                "setUsrTelefono", usuario,
+                (usuarioRepository::existsByTelefono),
+                "El número de teléfono ingresado ya pertenece a una cuanta existente"
         );
 
         TextFieldConfiguration.textFieldFocusLost(
-                passwordField_Password, 1, 45,
+                textField_Email, 1, 45,
                 "Correo del usuario es requerido", label_Messages,
-                "setUsrEmail", usuario
+                "setUsrEmail", usuario,
+                (usuarioRepository::existsByEmail),
+                "El correo electrónico ingresado ya pertenece a una cuenta existente"
         );
 
         TextFieldConfiguration.textFieldFocusLost(
@@ -191,10 +198,10 @@ public class RegistrarController {
     }
 
     private void registrarNuevoUsuario() {
-        if (!usuario.getUsrNombre().equals(null) && !usuario.getUsrApellido().equals(null)
-                && !usuario.getUsrDireccion().equals(null) && !usuario.getUsrCui().equals(null)
-                && !usuario.getUsrTelefono().equals(null) && !usuario.getUsrEmail().equals(null)
-                && !usuario.getUsrPassword().equals(null) && !usuario.getMunicipio().equals(null)
+        if (usuario.getUsrNombre() != null && usuario.getUsrApellido() != null
+                && usuario.getUsrDireccion() != null && usuario.getUsrCui() != null
+                && usuario.getUsrTelefono() != null && usuario.getUsrEmail() != null
+                && usuario.getUsrPassword() != null && usuario.getMunicipio() != null
         ) {
             usuarioRepository.save(usuario);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

@@ -8,6 +8,8 @@ import javafx.scene.control.TextFormatter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
@@ -34,6 +36,30 @@ public class TextFieldConfiguration {
                 }
             }
         });
+    }
+
+    public static <T, R> void textFieldFocusLost(TextField textField, Integer minLength, Integer maxLength, String message, Label label, String methodName, T object, Predicate<String> predicate, String predicateMessage) {
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && oldValue) {
+                if (textField.getText().length() < minLength || textField.getText().length() > maxLength) {
+                    textField.requestFocus();
+                    label.setText(null);
+                    label.setText(message);
+                } else {
+                    System.out.println(String.format("[LOG] SE VA A EJECUTAR VERIFICACIÓN DE CUI %s EN BASE DE DATOS",textField.getText()));
+                    if (!predicate.test(textField.getText())) {
+                        label.setText(null);
+                        setValue(object, methodName, textField.getText());
+                    } else {
+                        textField.requestFocus();
+                        textField.setText(null);
+                        label.setText(predicateMessage);
+                    }
+                }
+            }
+        });
+
+
     }
 
     /**

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Hyperlink?>
@@ -15,9 +16,17 @@
       <TextField fx:id="textField_cui" layoutX="66.0" layoutY="125.0" prefHeight="32.0" prefWidth="292.0" styleClass="textField" />
       <PasswordField fx:id="passwordField_Contrasenia" layoutX="66.0" layoutY="204.0" prefHeight="32.0" prefWidth="292.0" styleClass="textField" />
       <CheckBox fx:id="checkBox_sesion" layoutX="72.0" layoutY="250.0" mnemonicParsing="false" text="Recordar Sesión" />
-      <Button fx:id="button_login" layoutX="66.0" layoutY="305.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="292.0" styleClass="button-info" text="Iniciar Sesión" />
+      <Button fx:id="button_login" layoutX="66.0" layoutY="305.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="292.0" text="Iniciar Sesión">
+         <styleClass>
+            <String fx:value="button-general" />
+            <String fx:value="button-info" />
+         </styleClass></Button>
       <Hyperlink fx:id="hyperlink_registrar" layoutX="336.0" layoutY="404.0" text="Registrasse" textAlignment="RIGHT" />
-      <Button fx:id="button_salir" layoutX="14.0" layoutY="402.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="86.0" styleClass="button-warning" text="Salir" />
+      <Button fx:id="button_salir" layoutX="14.0" layoutY="402.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="86.0" text="Salir">
+         <styleClass>
+            <String fx:value="button-general" />
+            <String fx:value="button-warning" />
+         </styleClass></Button>
       <Label layoutX="66.0" layoutY="178.0" text="Contraseña" />
       <Text layoutX="78.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-h2" text="Inicio de Sesión - Libreria Bookers" />
       <Label fx:id="label_mensaje" alignment="TOP_LEFT" layoutX="66.0" layoutY="344.0" prefHeight="42.0" prefWidth="292.0" styleClass="label-message" wrapText="true" />
