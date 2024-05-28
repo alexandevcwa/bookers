@@ -12,4 +12,5 @@ module org.alexandevcwa.application {
 
     opens org.alexandevcwa.application.controller to javafx.fxml;
     opens org.alexandevcwa.application.controller.util to javafx.fxml;
+    opens org.alexandevcwa.application.model.enumerator to javafx.fxml;
 }

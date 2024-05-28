@@ -42,7 +42,7 @@
                               <String fx:value="button-info" />
                            </styleClass>
                         </Button>
-                        <Label layoutX="65.0" layoutY="77.0" text="Titulo" />
+                        <Label layoutX="65.0" layoutY="77.0" text="Titulo" AnchorPane.leftAnchor="65.0" />
                         <Label layoutX="65.0" layoutY="151.0" text="Fecha Publicación" />
                         <Label layoutX="65.0" layoutY="221.0" text="Previa del Libro" />
                         <Label layoutX="65.0" layoutY="384.0" text="ISBN" />
@@ -50,7 +50,7 @@
                         <Label layoutX="65.0" layoutY="467.0" text="Autor" />
                         <Label layoutX="284.0" layoutY="467.0" text="Editorial" />
                         <Label layoutX="503.0" layoutY="467.0" text="Categoría" />
-                        <Label fx:id="label_Titulo" layoutX="29.0" layoutY="25.0" styleClass="text-h2" text="Agregar Nuevo Libro" />
+                        <Label fx:id="label_Titulo" layoutX="29.0" layoutY="25.0" styleClass="text-h2" text="Agregar Nuevo Libro" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="25.0" />
                         <ToggleButton fx:id="toggleButton_Actualizar" layoutX="585.0" layoutY="105.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="200.0" text="Modo Actualización">
                            <styleClass>
                               <String fx:value="button-general" />
@@ -79,9 +79,50 @@
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab text="Inventarios">
+          <Tab fx:id="tab_Inventarios" text="Inventarios">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="31.0" layoutY="29.0" styleClass="text-h2" text="Movimiento de Inventario" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="25.0" />
+                        <Label layoutX="63.0" layoutY="89.0" text="ISBN" AnchorPane.leftAnchor="65.0" AnchorPane.topAnchor="80.0" />
+                        <TextField fx:id="textField_InvIsbn" layoutX="65.0" layoutY="106.0" prefHeight="32.0" prefWidth="260.0" promptText="Código de Barras o QR" styleClass="textField" AnchorPane.leftAnchor="65.0" />
+                        <Button fx:id="button_InvBuscarLibro" layoutX="727.0" layoutY="375.0" mnemonicParsing="false" onAction="#button_BuscarLibroInventario" prefHeight="30.0" prefWidth="114.0" styleClass="button-general" text="Buscar Libro" />
+                        <Button fx:id="button_BuscarInventario" layoutX="335.0" layoutY="107.0" mnemonicParsing="false" onAction="#button_BuscarInventario" prefHeight="30.0" prefWidth="90.0" styleClass="button-general" text="Buscar" />
+                        <Label layoutX="67.0" layoutY="165.0" text="Transacción" />
+                        <ComboBox fx:id="comboBox_Transaccion" layoutX="67.0" layoutY="192.0" prefHeight="32.0" prefWidth="260.0" promptText="Tipo de Transaccióna Realizar" styleClass="textField" />
+                        <AnchorPane layoutX="440.0" layoutY="80.0" prefHeight="289.0" prefWidth="402.0" style="-fx-border-color: gray;">
+                           <children>
+                              <Label layoutX="31.0" layoutY="26.0" style="-fx-label-padding: 10px 0; -fx-font-weight: bold;" text="Titulo:" />
+                              <Label layoutX="31.0" layoutY="67.0" style="-fx-label-padding: 10px 0; -fx-font-weight: bold;" text="Fecha de Publicación:" />
+                              <Label layoutX="31.0" layoutY="108.0" style="-fx-label-padding: 10px 0; -fx-font-weight: bold;" text="Autor:" />
+                              <Label layoutX="31.0" layoutY="149.0" style="-fx-label-padding: 10px 0; -fx-font-weight: bold;" text="Categoría:" />
+                              <Label layoutX="31.0" layoutY="190.0" style="-fx-label-padding: 10px 0; -fx-font-weight: bold;" text="Editorial:" />
+                              <Label fx:id="label_InvTitulo" layoutX="76.0" layoutY="26.0" style="-fx-label-padding: 10px 2px;" text="." />
+                              <Label fx:id="label_InvPublica" layoutX="175.0" layoutY="67.0" style="-fx-label-padding: 10px 2px;" text="." />
+                              <Label fx:id="label_InvAutor" layoutX="76.0" layoutY="108.0" style="-fx-label-padding: 10px 2px;" text="." />
+                              <Label fx:id="label_InvCategoria" layoutX="103.0" layoutY="149.0" style="-fx-label-padding: 10px 2px;" text="." />
+                              <Label fx:id="label_InvEditorial" layoutX="95.0" layoutY="190.0" style="-fx-label-padding: 10px 2px;" text="." />
+                              <Label layoutX="33.0" layoutY="231.0" style="-fx-label-padding: 10px 0; -fx-font-weight: bold;" text="Cantidad de Inventario:" textFill="RED" />
+                              <Label fx:id="label_InvCantidad" layoutX="192.0" layoutY="231.0" style="-fx-label-padding: 10px 2px;" text="." />
+                           </children>
+                        </AnchorPane>
+                        <Label layoutX="459.0" layoutY="69.0" style="-fx-background-color: #f4f4f4; -fx-label-padding: 0 10px;" text="Detalle" />
+                        <TextField fx:id="textField_InvMin" layoutX="65.0" layoutY="280.0" prefHeight="32.0" prefWidth="260.0" promptText="Numérico" styleClass="textField" />
+                        <TextField fx:id="textField_InvMax" layoutX="66.0" layoutY="352.0" prefWidth="260.0" promptText="Numérico" styleClass="textField" />
+                        <TextField fx:id="textField_InvCantidad" layoutX="65.0" layoutY="424.0" prefWidth="260.0" promptText="Numérico" styleClass="textField" />
+                        <Label layoutX="65.0" layoutY="254.0" text="Inventario Mínimo" />
+                        <Label layoutX="67.0" layoutY="326.0" text="Inventario Máximo" />
+                        <Label layoutX="66.0" layoutY="397.0" text="Cantidad" />
+                        <Button fx:id="button_GuardarTransaccion" layoutX="225.0" layoutY="467.0" mnemonicParsing="false" onAction="#button_GuardarTransaccion" prefHeight="30.0" prefWidth="100.0" text="Guardar">
+                           <styleClass>
+                              <String fx:value="button-general" />
+                              <String fx:value="button-info" />
+                           </styleClass>
+                        </Button>
+                        <Label fx:id="label_InvMessage" layoutX="65.0" layoutY="533.0" styleClass="label-message" />
+                        <TextField fx:id="textField_ReferenciaDevolucion" disable="true" layoutX="335.0" layoutY="424.0" prefHeight="32.0" prefWidth="180.0" promptText="NO. Detalle Prestamo" styleClass="textField" />
+                        <Label layoutX="335.0" layoutY="397.0" text="Referencia" />
+                     </children></AnchorPane>
             </content>
           </Tab>
             <Tab text="Reportes">

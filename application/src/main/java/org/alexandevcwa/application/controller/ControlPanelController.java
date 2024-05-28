@@ -13,6 +13,9 @@ import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 import lombok.Setter;
 import org.alexandevcwa.application.BookersApplication;
+import org.alexandevcwa.application.Inventario;
+import org.alexandevcwa.application.Libreria;
+import org.alexandevcwa.application.model.enumerator.InventarioTransaccion;
 import org.alexandevcwa.application.controller.util.TextFieldConfiguration;
 import org.alexandevcwa.application.model.*;
 import org.alexandevcwa.application.model.repository.*;
@@ -32,19 +35,47 @@ public class ControlPanelController {
     @Setter
     private Stage controlPanelStage;
 
-    // Repositorios
+    ///////////////////////////
+    //[REPOSITORIOS DE DATOS]//
+    ///////////////////////////
 
+    /**
+     * Repositorio de Categorías de Libros
+     */
     private final CategoriaRepository categoriaRepository;
 
+    /**
+     * Repositorio de Autores de Libros
+     */
     private final AutorRepository autorRepository;
 
+    /**
+     * Repositorio de Editoriales de Libros
+     */
     private final EditorialRepository editorialRepository;
 
-    private final LibreriaRepository libreriaRepository;
-
+    /**
+     * Repositorio de Libros
+     */
     private final LibroRepository libroRepository;
 
-    // Panel de Control - Libros
+    /**
+     * Repositorio de Inventario
+     */
+    private final InventarioRepository inventarioRepository;
+
+    /**
+     * Repositorio de Movimientos de Inventario
+     */
+    private final MovimientoInventarioRepository movimientoInventarioRepository;
+
+    /////////////////////////////
+    //[COMPONENTES DE PANTALLA]//
+    /////////////////////////////
+
+    ////////////////////////////////////
+    //[PANTALLA DE REGISTRO DE LIBROS]//
+    ////////////////////////////////////
 
     @FXML
     private Label label_Titulo;
@@ -94,27 +125,95 @@ public class ControlPanelController {
     @FXML
     private Button button_Limpiar;
 
-    private Libro libro = new Libro();
+    ///////////////////////////////
+    //[COMPONENTES DE INVENTARIO]//
+    ///////////////////////////////
 
+    @FXML
+    private TextField textField_InvIsbn;
+
+    @FXML
+    private ComboBox<InventarioTransaccion> comboBox_Transaccion;
+
+    @FXML
+    private TextField textField_InvMin;
+
+    @FXML
+    private TextField textField_InvMax;
+
+    @FXML
+    private TextField textField_InvCantidad;
+
+    @FXML
+    private Button button_GuardarTransaccion;
+
+    @FXML
+    private Button button_BuscarInventario;
+
+    @FXML
+    private Label label_InvTitulo;
+
+    @FXML
+    private Label label_InvPublica;
+
+    @FXML
+    private Label label_InvAutor;
+
+    @FXML
+    private Label label_InvCategoria;
+
+    @FXML
+    private Label label_InvEditorial;
+
+    @FXML
+    private Label label_InvCantidad;
+
+    @FXML
+    private Label label_InvMessage;
+
+    @FXML
+    private TextField textField_ReferenciaDevolucion;
+
+    ////////////////////////////////////////
+    //[OBJETOS PARA GUARDAR TRANSACCIONES]//
+    ////////////////////////////////////////
+
+    private Libro globalLibro;
+
+    private Inventario globalInventario;
+
+    private MovimientoInventario glovalMovimientoInventario;
+
+    /**
+     * Método constructor de clase controlador
+     */
     public ControlPanelController() {
         this.autorRepository = new AutorRepository();
         this.categoriaRepository = new CategoriaRepository();
-        this.libreriaRepository = new LibreriaRepository();
         this.libroRepository = new LibroRepository();
         this.editorialRepository = new EditorialRepository();
+        this.inventarioRepository = new InventarioRepository();
+        this.movimientoInventarioRepository = new MovimientoInventarioRepository();
+
+        this.globalLibro = new Libro();
     }
 
+    /**
+     * Método de inicialización de componentes
+     */
     public void initialize() {
 
-        //Configuración de los TextFields al perder el focus
-        TextFieldConfiguration.textFieldUpperCase(textField_Titulo);
+        //////////////////////////////////////////////////
+        //[CONFIGURACIÓN PARA PANEL DE CONTROL - LIBROS]//
+        //////////////////////////////////////////////////
 
+        TextFieldConfiguration.textFieldUpperCase(textField_Titulo);
         TextFieldConfiguration.textFieldFocusLost(textField_Titulo, 1, 50, "El nombre del libro es requerido", label_Message);
         TextFieldConfiguration.textFieldFocusLost(textField_Isbn, 1, 25, "El ISBN es requerido", label_Message);
 
         //Asignar fecha de publicación al objeto libro a guardar
         datePicker_Publica.setOnAction(actionEvent -> {
-            libro.setLbrPublica(datePicker_Publica.getValue());
+            globalLibro.setLbrPublica(datePicker_Publica.getValue());
         });
 
         //Evento Focus Lost, analizar el texto del TextArea al perder el focus
@@ -122,7 +221,7 @@ public class ControlPanelController {
             if (!newValue) {
                 if (textArea_Previa.getText().length() > 1 && textArea_Previa.getText().length() < 150) {
                     label_Message.setText(null);
-                    libro.setLbrPrevia(textArea_Previa.getText());
+                    globalLibro.setLbrPrevia(textArea_Previa.getText());
                 } else {
                     textArea_Previa.requestFocus();
                     label_Message.setText("La previa del libro es requerida");
@@ -154,24 +253,69 @@ public class ControlPanelController {
         loadComboBoxCateogirias();
         loadComboBoxEditoriales();
 
-        button_Guardar.setOnAction(actionEvent -> transactionLibro());
+        button_Guardar.setOnAction(actionEvent -> transactionSaveBook());
 
-        setUpdateModeOn();
+        // Cambiar a modo actualización
+        updateBookModeOn();
+
+        ///////////////////////////////////////////////////////
+        //[CONFIGURACIÓN PARA PANEL DE CONTROL - INVENTARIOS]//
+        ///////////////////////////////////////////////////////
+
+        TextFieldConfiguration.textFieldSetRegex(textField_InvMin, "\\d*");
+        TextFieldConfiguration.textFieldSetRegex(textField_InvMax, "\\d*");
+        TextFieldConfiguration.textFieldSetRegex(textField_InvCantidad, "\\d*");
+        TextFieldConfiguration.textFieldSetRegex(textField_ReferenciaDevolucion, "\\d*");
+
+        comboBox_Transaccion.getItems().addAll(InventarioTransaccion.values());
+        comboBox_Transaccion.setConverter(new StringConverter<InventarioTransaccion>() {
+            @Override
+            public String toString(InventarioTransaccion invTransaccion) {
+                if (invTransaccion != null) {
+                    if (invTransaccion != InventarioTransaccion.CONFIGURACION_INICIAL){
+                        textField_InvMax.setDisable(true);
+                        textField_InvMin.setDisable(true);
+                    }else {
+                        textField_InvMax.setDisable(false);
+                        textField_InvMin.setDisable(false);
+                    }
+                    if (invTransaccion == InventarioTransaccion.ENTRADA_DEVOLUCION || invTransaccion == InventarioTransaccion.SALIDA_PRESTAMO){
+                        textField_ReferenciaDevolucion.setDisable(false);
+                    }else {
+                        textField_ReferenciaDevolucion.setDisable(true);
+                    }
+                    return invTransaccion.getTransaccion();
+                }
+                return null;
+            }
+
+            @Override
+            public InventarioTransaccion fromString(String s) {
+                return null;
+            }
+        });
+
     }
 
+    /**
+     * Conversión de imágenes a bytes para guardar en base de datos
+     */
     private void convertImageToBytes(String url) throws IOException {
         BufferedImage bufferedImage = ImageIO.read(new File(url.substring(6)));
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
         byte[] bytes = byteArrayOutputStream.toByteArray();
-        libro.setLbrCover(bytes);
+        globalLibro.setLbrCover(bytes);
     }
 
-    private void transactionLibro() {
-        this.libro.setLbrTitulo(textField_Titulo.getText());
-        this.libro.setLbrISBN(textField_Isbn.getText());
-        this.libro.setLbrPublica(datePicker_Publica.getValue());
-        this.libro.setLbrPrevia(textArea_Previa.getText());
+    /**
+     * Método para guardas un libro en base de datos
+     */
+    private void transactionSaveBook() {
+        this.globalLibro.setLbrTitulo(textField_Titulo.getText());
+        this.globalLibro.setLbrISBN(textField_Isbn.getText());
+        this.globalLibro.setLbrPublica(datePicker_Publica.getValue());
+        this.globalLibro.setLbrPrevia(textArea_Previa.getText());
         try {
             if (!textField_Titulo.textProperty().getValue().isEmpty()
                     && datePicker_Publica.valueProperty().getValue() != null
@@ -183,7 +327,7 @@ public class ControlPanelController {
                     && imageView_Cover.getImage() != null
             ) {
                 int result = toggleButton_Actualizar.isSelected() ?
-                        libroRepository.update(libro) : libroRepository.save(libro);
+                        libroRepository.update(globalLibro) : libroRepository.save(globalLibro);
                 label_Message.setText(String.format("Se realizo %s transacción correctamente", result));
 
             } else {
@@ -201,18 +345,19 @@ public class ControlPanelController {
         }
     }
 
+    /**
+     * Cargar los autores registrados de los libros
+     */
     private void loadComboBoxAutores() {
         var listaAutores = autorRepository.findAll();
         if (!listaAutores.isEmpty()) {
             comboBox_Autor.getItems().clear();
             comboBox_Autor.getItems().addAll(listaAutores);
             comboBox_Autor.setConverter(new StringConverter<Autor>() {
+
                 @Override
                 public String toString(Autor autor) {
-                    if (autor == null) {
-                        return null;
-                    }
-                    return autor.getAutNombre();
+                    return (autor == null ? null : autor.getAutNombre());
                 }
 
                 @Override
@@ -223,10 +368,13 @@ public class ControlPanelController {
         }
 
         comboBox_Autor.setOnAction(actionEvent -> {
-            libro.setAutor(comboBox_Autor.getValue());
+            globalLibro.setAutor(comboBox_Autor.getValue());
         });
     }
 
+    /**
+     * Cargar las categorías de los libros
+     */
     private void loadComboBoxCateogirias() {
 
         var listaCategorias = categoriaRepository.findAll();
@@ -241,10 +389,7 @@ public class ControlPanelController {
             comboBox_Categoria.setConverter(new StringConverter<Categoria>() {
                 @Override
                 public String toString(Categoria categoria) {
-                    if (categoria == null) {
-                        return null;
-                    }
-                    return categoria.getCategoNombre();
+                    return (categoria == null ? null : categoria.getCategoNombre());
                 }
 
                 @Override
@@ -255,10 +400,13 @@ public class ControlPanelController {
         }
 
         comboBox_Categoria.setOnAction(actionEvent -> {
-            libro.setCategoria(comboBox_Categoria.getValue());
+            globalLibro.setCategoria(comboBox_Categoria.getValue());
         });
     }
 
+    /**
+     * Cargar las editoriales de los libros
+     */
     private void loadComboBoxEditoriales() {
 
         var listaEditoriales = editorialRepository.findAll();
@@ -268,10 +416,7 @@ public class ControlPanelController {
             comboBox_Editorial.setConverter(new StringConverter<Editorial>() {
                 @Override
                 public String toString(Editorial editorial) {
-                    if (editorial == null) {
-                        return null;
-                    }
-                    return editorial.getEditNombre();
+                    return (editorial == null ? null : editorial.getEditNombre());
                 }
 
                 @Override
@@ -282,11 +427,11 @@ public class ControlPanelController {
         }
 
         comboBox_Editorial.setOnAction(actionEvent -> {
-            libro.setEditorial(comboBox_Editorial.getValue());
+            globalLibro.setEditorial(comboBox_Editorial.getValue());
         });
     }
 
-    private void setUpdateModeOn() {
+    private void updateBookModeOn() {
         toggleButton_Actualizar.setOnAction(actionEvent -> {
             if (toggleButton_Actualizar.isSelected()) {
                 radioButton_Estado.setText("Activado");
@@ -305,32 +450,36 @@ public class ControlPanelController {
         });
 
         button_BuscarLibro.setOnAction(actionEvent -> {
-            FXMLLoader fxmlLoader = new FXMLLoader(BookersApplication.class.getResource("bookers-tool-lista-libros.fxml"));
-            Stage toolStage = new Stage(StageStyle.UTILITY);
-            toolStage.initModality(Modality.WINDOW_MODAL);
-            toolStage.initOwner(controlPanelStage);
-            toolStage.setResizable(false);
-            Scene scene = null;
-            try {
-                scene = new Scene(fxmlLoader.load());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            toolStage.setScene(scene);
-
-            ToolBuscarLibroController controller = fxmlLoader.getController();
-            controller.setStage(toolStage);
-            toolStage.showAndWait();
-            this.libro = controller.getLibro();
-            if (libro != null) {
-                loadLibroToScreen(libro);
+            this.globalLibro = openWindowToFindBook();
+            if (globalLibro != null) {
+                loadBookToShowOnScreen(globalLibro);
             } else {
-                this.libro = new Libro();
+                this.globalLibro = new Libro();
             }
         });
     }
 
-    private void cleanComponents(){
+    private Libro openWindowToFindBook() {
+        FXMLLoader fxmlLoader = new FXMLLoader(BookersApplication.class.getResource("bookers-tool-lista-libros.fxml"));
+        Stage toolStage = new Stage(StageStyle.UTILITY);
+        toolStage.initModality(Modality.WINDOW_MODAL);
+        toolStage.initOwner(controlPanelStage);
+        toolStage.setResizable(false);
+        Scene scene = null;
+        try {
+            scene = new Scene(fxmlLoader.load());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        toolStage.setScene(scene);
+
+        ToolBuscarLibroController controller = fxmlLoader.getController();
+        controller.setStage(toolStage);
+        toolStage.showAndWait();
+        return controller.getLibro();
+    }
+
+    private void cleanComponents() {
         textField_Titulo.clear();
         datePicker_Publica.setValue(null);
         textArea_Previa.clear();
@@ -342,7 +491,7 @@ public class ControlPanelController {
 
     }
 
-    private void loadLibroToScreen(Libro libro) {
+    private void loadBookToShowOnScreen(Libro libro) {
         textField_Titulo.setText(libro.getLbrTitulo());
         datePicker_Publica.setValue(libro.getLbrPublica());
         textArea_Previa.setText(libro.getLbrPrevia());
@@ -366,5 +515,91 @@ public class ControlPanelController {
                 comboBox_Categoria.setValue(categoria);
             }
         }
+    }
+
+    @FXML
+    public void button_BuscarInventario() {
+        String isbn = textField_InvIsbn.getText();
+        globalInventario = inventarioRepository.findInventarioByIsbnLibro(isbn);
+        System.out.println(globalInventario);
+        if (globalInventario != null) {
+            label_InvTitulo.setText(globalInventario.getLibro().getLbrTitulo());
+            label_InvPublica.setText(globalInventario.getLibro().getLbrPublica().toString());
+            label_InvAutor.setText(globalInventario.getLibro().getAutor().getAutNombre());
+            label_InvCategoria.setText(globalInventario.getLibro().getCategoria().getCategoNombre());
+            label_InvEditorial.setText(globalInventario.getLibro().getEditorial().getEditNombre());
+            textField_InvMin.setText(String.valueOf(globalInventario.getInvStockMin()));
+            textField_InvMax.setText(String.valueOf(globalInventario.getInvStockMax()));
+            label_InvCantidad.setText(String.valueOf(globalInventario.getInvDisponible()));
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("El ISBN ingresado no pertenece a ningún libro o no contiene inventario habilitado");
+            alert.setTitle("Alerta de Inventario");
+            alert.setHeaderText(null);
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    private void button_BuscarLibroInventario() {
+        globalLibro = openWindowToFindBook();
+        if (globalLibro != null) {
+            globalLibro.setLbrCover(null);
+            textField_InvIsbn.setText(globalLibro.getLbrISBN());
+        }
+    }
+
+    @FXML
+    private void button_GuardarTransaccion() {
+        try {
+            int stockMin = Integer.parseInt(textField_InvMin.getText());
+            int stockMax = Integer.parseInt(textField_InvMax.getText());
+            int dispMin = Integer.parseInt(textField_InvCantidad.getText());
+
+            if (comboBox_Transaccion.getValue() == InventarioTransaccion.CONFIGURACION_INICIAL) {
+                globalInventario = Inventario.builder()
+                        .invStockMin(stockMin)
+                        .invStockMax(stockMax)
+                        .invDisponible(dispMin)
+                        .libro(globalLibro)
+                        .libreria(Libreria.builder()
+                                .libId(1)
+                                .build())
+                        .build();
+                inventarioRepository.save(globalInventario);
+                showAlertOnScreen(Alert.AlertType.INFORMATION, "Inventario inicial habilitado y cargado en pantalla");
+                button_BuscarInventario();
+            } else if (comboBox_Transaccion.getValue() == InventarioTransaccion.AJUSTE_INV_SALIDA ||
+                    comboBox_Transaccion.getValue() == InventarioTransaccion.SALIDA_DESGASTE ||
+                    comboBox_Transaccion.getValue() == InventarioTransaccion.SALIDA_PRESTAMO) {
+                saveTransactionMovimientoInventario(dispMin, false);
+            } else {
+                saveTransactionMovimientoInventario(dispMin, true);
+            }
+        } catch (Exception e) {
+            showAlertOnScreen(Alert.AlertType.ERROR, e.getMessage());
+        }
+
+    }
+
+    private void saveTransactionMovimientoInventario(int disponible, boolean isSume) {
+        disponible = (isSume) ? disponible : (disponible * -1);
+        MovimientoInventario transaccion = MovimientoInventario.builder()
+                .mvnTipo(comboBox_Transaccion.getValue())
+                .mvnCantidad(disponible)
+                .mvnTotal(globalInventario.getInvDisponible() + disponible)
+                .inventario(globalInventario)
+                .build();
+        int rowsInserted = movimientoInventarioRepository.save(transaccion);
+        showAlertOnScreen(Alert.AlertType.INFORMATION,"Nueva transacción guardada con éxito. \n Transacciones: " + rowsInserted);
+        button_BuscarInventario();
+    }
+
+    private void showAlertOnScreen(Alert.AlertType alertType, String message){
+        Alert alert = new Alert(alertType);
+        alert.setTitle("Panel de Control");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

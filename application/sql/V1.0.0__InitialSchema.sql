@@ -130,25 +130,16 @@ create table PrestamosDetallePoliticas
     primary key (presd_id, plt_id)
 );
 
-create table PeriodosContables
-(
-    per_anio    integer not null,
-    per_periodo integer primary key,
-    per_inicial date    not null,
-    per_final   date    not null
-);
 
 create table Inventarios
 (
-    inv_id         serial                                             not null,
-    per_periodo    integer references PeriodosContables (per_periodo) not null,
     lib_id         integer                                            not null,
     lbr_sku        integer                                            not null,
     inv_disponible integer                                            null,
     inv_stockmin   integer                                            null,
     inv_stockmax   integer                                            null,
     inv_actualiza  timestamp default current_timestamp                null,
-    primary key (inv_id, per_periodo, lib_id, lbr_sku),
+    primary key (lib_id, lbr_sku),
     foreign key (lib_id, lbr_sku) references LibreriasLibros (lib_id, lbr_sku)
 );
 
@@ -172,12 +163,10 @@ create table MovimientosInventarios
     mvn_fecha      timestamp default current_timestamp                null,
     mvn_total      integer                                            not null,
     mvn_referencia integer references MovimientosInventarios (mvn_id) null,
-    inv_id         integer                                            not null,
-    per_periodo    integer                                            not null,
     lib_id         integer                                            not null,
     lbr_sku        integer                                            not null,
-    foreign key (inv_id, per_periodo, lib_id, lbr_sku)
-        references Inventarios (inv_id, per_periodo, lib_id, lbr_sku)
+    foreign key ( lib_id, lbr_sku)
+        references Inventarios (lib_id, lbr_sku)
 );
 
 create table Roles

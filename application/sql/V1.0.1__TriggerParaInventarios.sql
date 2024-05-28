@@ -6,9 +6,7 @@ begin
     update inventarios
     set inv_disponible = new.mvn_total,
         inv_actualiza  = new.mvn_fecha
-    where inv_id = new.inv_id
-      and per_periodo = new.per_periodo
-      and lib_id = new.lib_id
+    where lib_id = new.lib_id
       and lbr_sku = new.lbr_sku;
     return new;
 end;
@@ -20,5 +18,21 @@ create or replace trigger trigger_actualizar_inventario
     for each row
 execute function actualizar_inventario();
 
--- INSERTAR MOVIMIENTO INICIAL DE INVENTARIO POR PRODUCTO EN TABLA DE MOVIMIENTOS
--- CADA VEZ QUE SE CREE UN NUEVO PRODUCTO
+
+
+create or replace function habilitar_inventario()
+    returns trigger as
+$$
+begin
+    insert into movimientosinventarios
+    (mvn_tipo, mvn_cantidad, mvn_disponible, mvn_fecha, mvn_total, lib_id, lbr_sku)
+    values ('ENTRADA_NUEVO', new.inv_disponible, 0, current_timestamp, new.inv_disponible, new.lib_id,
+            new.lbr_sku);
+    return new;
+end;
+$$ language plpgsql;
+create or replace trigger trigger_habilitar_inventario
+    after insert
+    on inventarios
+    for each row
+execute function habilitar_inventario();
