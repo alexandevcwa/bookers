@@ -301,6 +301,7 @@ public class ControlPanelController {
      * Conversión de imágenes a bytes para guardar en base de datos
      */
     private void convertImageToBytes(String url) throws IOException {
+        System.out.println(url.substring(6));
         BufferedImage bufferedImage = ImageIO.read(new File(url.substring(6)));
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
